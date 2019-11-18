@@ -4,6 +4,7 @@ import os
 import pickle
 from activation import Activation
 from derivative import Derivative
+from softmax import Softmax
 from scipy.stats import truncnorm
 
 class NeuralNetwork:
@@ -57,6 +58,7 @@ class NeuralNetwork:
         output_vector2 = np.dot(self.weights_hidden_output, output_hidden)
         #output_network = Activation.sigmoid(output_vector2)
         output_network = Activation.reLU(output_vector2)
+        output_network = Softmax.calc(output_network)
 
         output_errors = target_vector - output_network
         # update the weights:
