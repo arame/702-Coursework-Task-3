@@ -38,11 +38,6 @@ train_labels_one_hot[train_labels_one_hot==1] = 0.99
 test_labels_one_hot[test_labels_one_hot==0] = 0.01
 test_labels_one_hot[test_labels_one_hot==1] = 0.99
 
-#for i in range(10):
-#    img = train_imgs[i].reshape((28,28))
-#    plt.imshow(img, cmap="Greys")
-#    plt.show()
-
 #**************************************************
 # To get the model to work, adjust these values
 epochs = 10
@@ -52,9 +47,7 @@ ANN = NeuralNetwork(no_of_in_nodes = image_pixels,
                                no_of_out_nodes = 10, 
                                no_of_hidden_nodes = 100,
                                learning_rate = learning_rate)
-    
-    
- 
+
 weights = ANN.train(train_imgs, 
                     train_labels_one_hot, 
                     epochs=epochs, 
