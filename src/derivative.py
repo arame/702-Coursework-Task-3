@@ -13,3 +13,10 @@ class Derivative:
             else:
                 arr[i] = 1
         return arr
+
+    @staticmethod
+    def softmax(output_errors, target_vector):
+        m = target_vector.shape[0]
+        output_errors[range(m),target_vector] -= 1
+        output_network = output_errors/m
+        return output_network

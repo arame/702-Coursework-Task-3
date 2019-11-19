@@ -4,7 +4,7 @@ import os
 import pickle
 from activation import Activation
 from derivative import Derivative
-from softmax import Softmax
+from cross_entropy import Cross_Entropy
 from scipy.stats import truncnorm
 
 class NeuralNetwork:
@@ -56,21 +56,22 @@ class NeuralNetwork:
         output_hidden = Activation.reLU(output_vector1)
         
         output_vector2 = np.dot(self.weights_hidden_output, output_hidden)
-        #output_network = Activation.sigmoid(output_vector2)
         #output_network = Activation.reLU(output_vector2)
-        output_network = Softmax.calc(output_vector2)
+        output_network = Activation.softmax(output_vector2)
 
         # TODO Replace with cross entropy
-        output_errors = target_vector - output_network
+        #output_errors = target_vector - output_network
+        training_labels = target_vector.argmax(axis=1)
+        output_errors = Cross_Entropy.calc(output_network, training_labels)
         # update the weights:
-        #tmp = output_errors * Derivative.sigmoid(output_network)
-        tmp = output_errors * Derivative.reLU(output_network)     
+        tmp = output_errors * Derivative.softmax(output_network, training_labels)     
         tmp = self.learning_rate  * np.dot(tmp, output_hidden.T)
         self.weights_hidden_output += tmp
         # calculate hidden errors:
         hidden_errors = np.dot(self.weights_hidden_output.T, output_errors)
         # ----------------------------------------------------------------------
         # update the weights:
+        # TODO Fix this
         tmp = hidden_errors * Derivative.reLU(output_hidden)
         # -----------------------------------------------------------------------
         self.weights_in_hidden += self.learning_rate * np.dot(tmp, input_vector.T)
