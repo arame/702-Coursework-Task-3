@@ -57,9 +57,10 @@ class NeuralNetwork:
         
         output_vector2 = np.dot(self.weights_hidden_output, output_hidden)
         #output_network = Activation.sigmoid(output_vector2)
-        output_network = Activation.reLU(output_vector2)
-        output_network = Softmax.calc(output_network)
+        #output_network = Activation.reLU(output_vector2)
+        output_network = Softmax.calc(output_vector2)
 
+        # TODO Replace with cross entropy
         output_errors = target_vector - output_network
         # update the weights:
         #tmp = output_errors * Derivative.sigmoid(output_network)
