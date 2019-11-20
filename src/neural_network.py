@@ -56,22 +56,21 @@ class NeuralNetwork:
         output_hidden = Activation.reLU(output_vector1)
         
         output_vector2 = np.dot(self.weights_hidden_output, output_hidden)
-        #output_network = Activation.reLU(output_vector2)
-        output_network = Activation.softmax(output_vector2)
+        output_network = Activation.reLU(output_vector2)
 
-        # TODO Replace with cross entropy
+        # TODO Add cross entropy
+        
         #output_errors = target_vector - output_network
-        training_labels = target_vector.argmax(axis=1)
-        output_errors = Cross_Entropy.calc(output_network, training_labels)
+        loss = Cross_Entropy.calc(output_network, target_vector)
+        gradient = Cross_Entropy.derived_calc(output_hidden, target_vector)
         # update the weights:
-        tmp = output_errors * Derivative.softmax(output_network, training_labels)     
-        tmp = self.learning_rate  * np.dot(tmp, output_hidden.T)
+        tmp = output_errors * Derivative.reLU(gradient)     
+        tmp = self.learning_rate  * np.dot(tmp, gradient.T)
         self.weights_hidden_output += tmp
         # calculate hidden errors:
-        hidden_errors = np.dot(self.weights_hidden_output.T, output_errors)
+        hidden_errors = np.dot(self.weights_hidden_output.T, loss)
         # ----------------------------------------------------------------------
         # update the weights:
-        # TODO Fix this
         tmp = hidden_errors * Derivative.reLU(output_hidden)
         # -----------------------------------------------------------------------
         self.weights_in_hidden += self.learning_rate * np.dot(tmp, input_vector.T)
