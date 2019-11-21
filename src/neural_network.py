@@ -58,14 +58,16 @@ class NeuralNetwork:
         output_vector2 = np.dot(self.weights_hidden_output, output_hidden)
         output_network = Activation.reLU(output_vector2)
 
-        # TODO Add cross entropy
-        
         #output_errors = target_vector - output_network
         loss = Cross_Entropy.calc(output_network, target_vector)
+        
         gradient = Cross_Entropy.derived_calc(output_hidden, target_vector)
         # update the weights:
-        tmp = output_errors * Derivative.reLU(gradient)     
+        derived1 = Derivative.reLU(gradient)
+        tmp = loss * derived1     
         tmp = self.learning_rate  * np.dot(tmp, gradient.T)
+
+        # TODO - fix this bug, exception caused by dimensions
         self.weights_hidden_output += tmp
         # calculate hidden errors:
         hidden_errors = np.dot(self.weights_hidden_output.T, loss)

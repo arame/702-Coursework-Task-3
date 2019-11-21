@@ -7,6 +7,8 @@ from scipy.stats import truncnorm
 from files import Files
 from local_time import LocalTime
 from neural_network import NeuralNetwork
+
+print('\n' * 10)
 t = LocalTime()
 print("*********************************************************")
 print("** Start at ", t.localtime)
