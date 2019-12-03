@@ -62,13 +62,13 @@ class NeuralNetwork:
         loss = Cross_Entropy.calc(output_network, target_vector)
         
         gradient = Cross_Entropy.derived_calc(output_hidden, target_vector)
+        tmp1 = loss * gradient
         # update the weights:
         derived1 = Derivative.reLU(gradient)
-        tmp = loss * derived1     
-        tmp = self.learning_rate  * np.dot(tmp, gradient.T)
-
+        tmp2 = derived1 * tmp1
+        tmp3 = self.learning_rate  * np.dot(tmp2, output_hidden.T)
         # TODO - fix this bug, exception caused by dimensions
-        self.weights_hidden_output += tmp
+        self.weights_hidden_output += tmp3
         # calculate hidden errors:
         hidden_errors = np.dot(self.weights_hidden_output.T, loss)
         # ----------------------------------------------------------------------
