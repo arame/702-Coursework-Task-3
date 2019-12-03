@@ -44,11 +44,6 @@ class NeuralNetwork:
         self.weights_hidden_output = X.rvs((self.no_of_out_nodes, self.no_of_hidden_nodes))
         
     def train_single(self, input_vector, target_vector):
-        """
-        input_vector and target_vector can be tuple, 
-        list or ndarray
-        """
-        
         input_vector = np.array(input_vector, ndmin=2).T
         target_vector = np.array(target_vector, ndmin=2).T
         
@@ -58,7 +53,6 @@ class NeuralNetwork:
         output_vector2 = np.dot(self.weights_hidden_output, output_hidden)
         output_network = Activation.reLU(output_vector2)
 
-        #output_errors = target_vector - output_network
         loss = Cross_Entropy.calc(output_network, target_vector)
         
         gradient = Cross_Entropy.derived_calc(output_hidden, target_vector)
@@ -66,16 +60,19 @@ class NeuralNetwork:
         # update the weights:
         derived1 = Derivative.reLU(gradient)
         tmp2 = derived1 * tmp1
-        tmp3 = self.learning_rate  * np.dot(tmp2, output_hidden.T)
-        # TODO - fix this bug, exception caused by dimensions
-        self.weights_hidden_output += tmp3
+        
+        # TODO - fix this bug, exception caused by dimensions ######################################
+        
+        ############################################################################################
         # calculate hidden errors:
         hidden_errors = np.dot(self.weights_hidden_output.T, loss)
         # ----------------------------------------------------------------------
         # update the weights:
-        tmp = hidden_errors * Derivative.reLU(output_hidden)
+        tmp4 = hidden_errors * Derivative.reLU(output_hidden)
         # -----------------------------------------------------------------------
-        self.weights_in_hidden += self.learning_rate * np.dot(tmp, input_vector.T)
+
+        self.weights_hidden_output += self.learning_rate  * np.dot(tmp2, output_hidden.T)
+        self.weights_in_hidden += self.learning_rate * np.dot(tmp4, input_vector.T)
         
     def train(self, data_array, 
               labels_one_hot_array,
