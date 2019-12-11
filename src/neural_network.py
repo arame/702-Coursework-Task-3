@@ -44,6 +44,17 @@ class NeuralNetwork:
         self.weights_hidden_output = X.rvs((self.no_of_out_nodes, self.no_of_hidden_nodes))
         
     def train_single(self, input_vector, target_vector):
+        """"
+            Forward Propagation
+            input:  input_vector  [784], target_vector [10]
+            H1:     output_vector [100], weights_in_hidden[100, 784], output_hidden[100]
+            output: output_vector2 [10], weight_hidden_output[10, 100], output_network[10]
+            loss scalar 2.3
+
+            Backward Propagation
+            gradient [10], tmp1 [10], derived [10], tmp2 [10], hidden_errors [100,10], tmp5 [100,10]
+            
+        """
         input_vector = np.array(input_vector, ndmin=2).T
         target_vector = np.array(target_vector, ndmin=2).T
         
@@ -54,25 +65,21 @@ class NeuralNetwork:
         output_network = Activation.reLU(output_vector2)
 
         loss = Cross_Entropy.calc(output_network, target_vector)
-        
-        gradient = Cross_Entropy.derived_calc(output_hidden, target_vector)
+        gradient = Cross_Entropy.derived_calc(output_network, target_vector)
         tmp1 = loss * gradient
         # update the weights:
         derived1 = Derivative.reLU(gradient)
         tmp2 = derived1 * tmp1
-        
-        # TODO - fix this bug, exception caused by dimensions ######################################
-        
-        ############################################################################################
         # calculate hidden errors:
         hidden_errors = np.dot(self.weights_hidden_output.T, loss)
-        # ----------------------------------------------------------------------
         # update the weights:
-        tmp4 = hidden_errors * Derivative.reLU(output_hidden)
-        # -----------------------------------------------------------------------
-
+        tmp5 = hidden_errors * Derivative.reLU(output_hidden)
         self.weights_hidden_output += self.learning_rate  * np.dot(tmp2, output_hidden.T)
-        self.weights_in_hidden += self.learning_rate * np.dot(tmp4, input_vector.T)
+        # -----------------------------------------------------------------------
+        # TODO - fix this bug, exception caused by dimensions ######################################
+        tmp6 = np.dot(tmp5, input_vector.T)
+        ############################################################################################
+        self.weights_in_hidden += self.learning_rate * tmp6
         
     def train(self, data_array, 
               labels_one_hot_array,
