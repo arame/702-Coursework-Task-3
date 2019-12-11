@@ -9,10 +9,9 @@ from local_time import LocalTime
 from neural_network import NeuralNetwork
 
 print('\n' * 10)
-t = LocalTime()
-print("*********************************************************")
-print("** Start at ", t.localtime)
-print("*********************************************************")
+print("*"*100)
+print("** Start at ", LocalTime.get())
+print("*"*100)
 image_size = 28 # width and height
 no_of_different_labels = 10 #  i.e. 0, 1, 2, 3, ..., 9
 image_pixels = image_size * image_size
@@ -55,13 +54,13 @@ weights = ANN.train(train_imgs,
                     epochs=epochs, 
                     intermediate_results=True)
 
-print("---------------------------------------------------------")
+print("-"*100)
 print("Training")
-print("---------------------------------------------------------")
+print("-"*100)
 for i in range(epochs):  
     ANN.weights_in_hidden = weights[i][0]
     ANN.weights_hidden_output = weights[i][1] 
-    print("---------------------------------------------------------")
+    print("-"*100)
     print("epoch: ", i + 1)
   
     corrects, wrongs = ANN.evaluate(train_imgs, train_labels)
@@ -69,17 +68,17 @@ for i in range(epochs):
     corrects, wrongs = ANN.evaluate(test_imgs, test_labels)
     print("accuracy: test", corrects / ( corrects + wrongs))
 
-print("---------------------------------------------------------")
+print("-"*100)
 print("Testing")
-print("---------------------------------------------------------")
+print("-"*100)
 print("Confusion Matrix:")
 cm = ANN.confusion_matrix(train_imgs, train_labels)
 print(cm)
 for i in range(epochs):
     print("digit: ", i, "precision: ", ANN.precision(i, cm), "recall: ", ANN.recall(i, cm))
     
-print("---------------------------------------------------------")
-t = LocalTime()
-print("*********************************************************")
-print("** End at ", t.localtime)
-print("*********************************************************")
+print("-"*100)
+
+print("*"*100)
+print("** End at ", LocalTime.get())
+print("*"*100)
