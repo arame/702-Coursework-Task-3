@@ -42,7 +42,7 @@ test_labels_one_hot[test_labels_one_hot==1] = 0.99
 #**************************************************
 # To get the model to work, adjust these values
 epochs = 10
-learning_rate = 0.001
+learning_rate = 0.1
 #**************************************************
 ANN = NeuralNetwork(no_of_in_nodes = image_pixels, 
                                no_of_out_nodes = 10, 
@@ -55,7 +55,7 @@ weights = ANN.train(train_imgs,
                     intermediate_results=True)
 
 print("-"*100)
-print("Training")
+print("Training with learning rate = ", learning_rate)
 print("-"*100)
 for i in range(epochs):  
     ANN.weights_in_hidden = weights[i][0]
@@ -69,7 +69,7 @@ for i in range(epochs):
     print("accuracy: test", corrects / ( corrects + wrongs))
 
 print("-"*100)
-print("Testing")
+print("Testing with learning rate = ", learning_rate)
 print("-"*100)
 print("Confusion Matrix:")
 cm = ANN.confusion_matrix(train_imgs, train_labels)

@@ -52,7 +52,7 @@ class NeuralNetwork:
             loss scalar 2.3
 
             Backward Propagation
-            gradient [10], tmp1 [10], derived [10], tmp2 [10], hidden_errors [100,10], tmp5 [100,10]
+            gradient [10], derived [10], tmp2 [10], hidden_errors [100,10], tmp5 [100,10]
             
         """
         input_vector = np.array(input_vector, ndmin=2).T
@@ -66,20 +66,16 @@ class NeuralNetwork:
 
         loss = Cross_Entropy.calc(output_network, target_vector)
         gradient = Cross_Entropy.derived_calc(output_network, target_vector)
-        tmp1 = loss * gradient
         # update the weights:
         derived1 = Derivative.reLU(gradient)
-        tmp2 = derived1 * tmp1
+        tmp2 = derived1 * (loss * gradient)
         # calculate hidden errors:
-        hidden_errors = np.dot(self.weights_hidden_output.T, loss)
+        hidden_errors = np.dot(self.weights_hidden_output.T, loss * derived1)
         # update the weights:
         tmp5 = hidden_errors * Derivative.reLU(output_hidden)
-        self.weights_hidden_output += self.learning_rate  * np.dot(tmp2, output_hidden.T)
-        # -----------------------------------------------------------------------
-        # TODO - fix this bug, exception caused by dimensions ######################################
         tmp6 = np.dot(tmp5, input_vector.T)
-        ############################################################################################
-        self.weights_in_hidden += self.learning_rate * tmp6
+        self.weights_hidden_output += self.learning_rate  * np.dot(tmp2, output_hidden.T)
+        self.weights_in_hidden += self.learning_rate * np.dot(tmp5, input_vector.T)
         
     def train(self, data_array, 
               labels_one_hot_array,
