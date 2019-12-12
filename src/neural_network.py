@@ -73,7 +73,6 @@ class NeuralNetwork:
         hidden_errors = np.dot(self.weights_hidden_output.T, loss * derived1)
         # update the weights:
         tmp5 = hidden_errors * Derivative.reLU(output_hidden)
-        tmp6 = np.dot(tmp5, input_vector.T)
         self.weights_hidden_output += self.learning_rate  * np.dot(tmp2, output_hidden.T)
         self.weights_in_hidden += self.learning_rate * np.dot(tmp5, input_vector.T)
         
