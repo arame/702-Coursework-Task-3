@@ -59,20 +59,20 @@ class NeuralNetwork:
         target_vector = np.array(target_vector, ndmin=2).T
         
         output_vector1 = np.dot(self.weights_in_hidden, input_vector)
-        output_hidden = Activation.reLU(output_vector1)
+        output_hidden = Activation.leakyReLU(output_vector1)
         
         output_vector2 = np.dot(self.weights_hidden_output, output_hidden)
-        output_network = Activation.reLU(output_vector2)
+        output_network = Activation.leakyReLU(output_vector2)
 
         loss = Cross_Entropy.calc(output_network, target_vector)
         gradient = Cross_Entropy.derived_calc(output_network, target_vector)
         # update the weights:
-        derived1 = Derivative.reLU(gradient)
+        derived1 = Derivative.leakyReLU(gradient)
         tmp2 = derived1 * (loss * gradient)
         # calculate hidden errors:
         hidden_errors = np.dot(self.weights_hidden_output.T, loss * derived1)
         # update the weights:
-        tmp5 = hidden_errors * Derivative.reLU(output_hidden)
+        tmp5 = hidden_errors * Derivative.leakyReLU(output_hidden)
         self.weights_hidden_output += self.learning_rate  * np.dot(tmp2, output_hidden.T)
         self.weights_in_hidden += self.learning_rate * np.dot(tmp5, input_vector.T)
         
@@ -97,11 +97,10 @@ class NeuralNetwork:
         input_vector = np.array(input_vector, ndmin=2).T
         # 1st layer
         output_vector = np.dot(self.weights_in_hidden, input_vector)
-        output_vector = Activation.reLU(output_vector)
+        output_vector = Activation.leakyReLU(output_vector)
         # 2nd layer
         output_vector = np.dot(self.weights_hidden_output, output_vector)
-        #output_vector = Activation.sigmoid(output_vector)
-        output_vector = Activation.reLU(output_vector)
+        output_vector = Activation.leakyReLU(output_vector)
     
         return output_vector
             

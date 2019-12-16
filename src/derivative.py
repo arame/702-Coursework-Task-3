@@ -1,4 +1,5 @@
 import numpy as np
+from activation import Activation
 
 class Derivative:
     @staticmethod
@@ -11,8 +12,13 @@ class Derivative:
         return arr1
 
     @staticmethod
-    def softmax(output_errors, target_vector):
-        m = target_vector.shape[0]
-        output_errors[range(m),target_vector] -= 1
-        output_network = output_errors/m
-        return output_network
+    def hyperbolic(x):
+        return (1-np.square(x))
+
+    @staticmethod
+    def leakyReLU(x):
+        leaky_slope = 0.1
+        d=np.zeros_like(x)
+        d[x<=0]=leaky_slope
+        d[x>0]=1
+        return d
